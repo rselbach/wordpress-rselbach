@@ -212,7 +212,7 @@ function rselbach_customize_register($wp_customize) {
     
     // Mastodon URL
     $wp_customize->add_setting('rselbach_mastodon_url', array(
-        'default'           => 'https://cosocial.ca/@rselbach',
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
     ));
     
@@ -224,7 +224,7 @@ function rselbach_customize_register($wp_customize) {
     
     // Bluesky URL
     $wp_customize->add_setting('rselbach_bluesky_url', array(
-        'default'           => 'https://bsky.app/profile/rselbach.com',
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
     ));
     
@@ -236,7 +236,7 @@ function rselbach_customize_register($wp_customize) {
     
     // Twitter URL
     $wp_customize->add_setting('rselbach_twitter_url', array(
-        'default'           => 'https://x.com/robselbach',
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
     ));
     
@@ -248,7 +248,7 @@ function rselbach_customize_register($wp_customize) {
     
     // LinkedIn URL
     $wp_customize->add_setting('rselbach_linkedin_url', array(
-        'default'           => 'https://www.linkedin.com/in/rselbach',
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
     ));
     
@@ -260,7 +260,7 @@ function rselbach_customize_register($wp_customize) {
     
     // GitHub URL
     $wp_customize->add_setting('rselbach_github_url', array(
-        'default'           => 'https://github.com/rselbach/',
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
     ));
     
