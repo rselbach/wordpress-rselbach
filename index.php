@@ -61,7 +61,7 @@ get_header(); ?>
                         <?php endif; ?>
                     </div>
                     <div class="post-content markdown-body">
-                        <?php the_excerpt(); ?>
+                        <?php the_content(); ?>
                     </div>
                 </div>
             <?php endwhile; ?>
