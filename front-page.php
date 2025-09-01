@@ -26,21 +26,21 @@ get_header(); ?>
         
         <div class="social-links">
             <ul>
-                <li><a href="<?php echo esc_url(home_url('/blog')); ?>"><i class="fas fa-blog"></i> My blog</a></li>
+                <li><a href="<?php echo esc_url(home_url('/blog')); ?>"><?php echo rselbach_icon('blog'); ?> My blog</a></li>
                 <?php if ($mastodon = get_theme_mod('rselbach_mastodon_url')) : ?>
-                    <li><a href="<?php echo esc_url($mastodon); ?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-mastodon"></i> Mastodon</a></li>
+                    <li><a href="<?php echo esc_url($mastodon); ?>" target="_blank" rel="noopener noreferrer"><?php echo rselbach_icon('mastodon', 'brand'); ?> Mastodon</a></li>
                 <?php endif; ?>
                 <?php if ($bluesky = get_theme_mod('rselbach_bluesky_url')) : ?>
-                    <li><a href="<?php echo esc_url($bluesky); ?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-bluesky"></i> Bluesky</a></li>
+                    <li><a href="<?php echo esc_url($bluesky); ?>" target="_blank" rel="noopener noreferrer"><?php echo rselbach_icon('bluesky', 'brand'); ?> Bluesky</a></li>
                 <?php endif; ?>
                 <?php if ($twitter = get_theme_mod('rselbach_twitter_url')) : ?>
-                    <li><a href="<?php echo esc_url($twitter); ?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i> Twitter</a></li>
+                    <li><a href="<?php echo esc_url($twitter); ?>" target="_blank" rel="noopener noreferrer"><?php echo rselbach_icon('x', 'brand'); ?> Twitter</a></li>
                 <?php endif; ?>
                 <?php if ($linkedin = get_theme_mod('rselbach_linkedin_url')) : ?>
-                    <li><a href="<?php echo esc_url($linkedin); ?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    <li><a href="<?php echo esc_url($linkedin); ?>" target="_blank" rel="noopener noreferrer"><?php echo rselbach_icon('linkedin', 'brand'); ?> LinkedIn</a></li>
                 <?php endif; ?>
                 <?php if ($github = get_theme_mod('rselbach_github_url')) : ?>
-                    <li><a href="<?php echo esc_url($github); ?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="<?php echo esc_url($github); ?>" target="_blank" rel="noopener noreferrer"><?php echo rselbach_icon('github', 'brand'); ?> GitHub</a></li>
                 <?php endif; ?>
             </ul>
         </div>

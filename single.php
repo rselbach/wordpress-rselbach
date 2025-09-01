@@ -15,13 +15,13 @@ get_header(); ?>
             <h1 class="post-title"><?php the_title(); ?></h1>
             <div class="post-meta">
                 <span class="post-date">
-                    <i class="far fa-calendar-alt"></i> <?php echo get_the_date('F j, Y'); ?>
+                    <?php echo rselbach_icon('calendar'); ?> <?php echo get_the_date('F j, Y'); ?>
                 </span>
                 <?php
                 $tags = get_the_tags();
                 if ($tags) : ?>
                     <span class="post-tags">
-                        <i class="fas fa-tags"></i>
+                        <?php echo rselbach_icon('tags'); ?>
                         <?php foreach ($tags as $tag) : ?>
                             <a href="<?php echo esc_url(get_tag_link($tag->term_id)); ?>" class="tag">
                                 <?php echo esc_html($tag->name); ?>

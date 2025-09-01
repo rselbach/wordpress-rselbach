@@ -76,7 +76,20 @@ function rselbach_scripts() {
     // Enqueue theme stylesheet (cache-busted by file mtime)
     $style_path = get_stylesheet_directory() . '/style.css';
     $style_ver  = file_exists($style_path) ? filemtime($style_path) : null;
-    wp_enqueue_style('rselbach-style', get_stylesheet_uri(), array(), $style_ver);
+    // Self-hosted icons CSS (optional)
+    $icons_css = get_template_directory() . '/assets/icons/icons.css';
+    $deps = array();
+    if (file_exists($icons_css)) {
+        wp_enqueue_style(
+            'rselbach-icons',
+            get_template_directory_uri() . '/assets/icons/icons.css',
+            array(),
+            filemtime($icons_css)
+        );
+        $deps[] = 'rselbach-icons';
+    }
+
+    wp_enqueue_style('rselbach-style', get_stylesheet_uri(), $deps, $style_ver);
     
     // Add custom CSS for accent and decoration colors
     $accent_color = get_theme_mod('rselbach_accent_color', '#ff7675');
@@ -107,6 +120,23 @@ function rselbach_scripts() {
     }
 }
 add_action('wp_enqueue_scripts', 'rselbach_scripts');
+
+/**
+ * Render an inline SVG icon from the theme sprite.
+ *
+ * @param string $name  ID of the symbol in assets/icons/icons.svg
+ * @param string $class Extra CSS classes
+ * @return string SVG markup or empty string if sprite missing
+ */
+function rselbach_icon($name, $class = '') {
+    $sprite = get_template_directory() . '/assets/icons/icons.svg';
+    if (!file_exists($sprite)) {
+        return '';
+    }
+    $classes = trim('icon icon-' . preg_replace('/[^a-z0-9\-]/i', '', $name) . ' ' . $class);
+    $href    = get_template_directory_uri() . '/assets/icons/icons.svg#' . rawurlencode($name);
+    return '<svg class="' . esc_attr($classes) . '" aria-hidden="true" focusable="false"><use href="' . esc_url($href) . '"></use></svg>';
+}
 
 /**
  * Custom navigation walker class
@@ -327,11 +357,17 @@ add_filter('body_class', 'rselbach_body_classes');
  * Optimize jQuery loading
  */
 function rselbach_optimize_jquery() {
-    if (!is_admin()) {
-        // Remove jQuery Migrate in production
+    if (is_admin()) {
+        return;
+    }
+
+    // Disable jQuery Migrate only if explicitly opted in
+    if (apply_filters('rselbach_disable_jquery_migrate', false)) {
         wp_deregister_script('jquery-migrate');
-        
-        // Move jQuery to footer
+    }
+
+    // Move jQuery to the footer only if opted in
+    if (apply_filters('rselbach_move_jquery_to_footer', false)) {
         wp_scripts()->add_data('jquery', 'group', 1);
         wp_scripts()->add_data('jquery-core', 'group', 1);
     }

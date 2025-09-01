@@ -377,32 +377,11 @@ hr {
   text-decoration: none;
 }
 
-.social-links i {
-  font-size: 1.8rem;
-  width: 2rem;
-  text-align: center;
+.social-links .icon {
+  width: 1.25em;
+  height: 1.25em;
+  margin-right: 0.5rem;
   color: var(--color-decoration);
-  display: inline-block;
-}
-
-/* Fix specific icon widths for better alignment */
-.social-links .fa-newspaper {
-  width: 2rem;
-}
-
-.social-links .fa-github,
-.social-links .fa-linkedin {
-  width: 2rem;
-}
-
-/* Custom Bluesky icon */
-.social-links .fa-bluesky {
-  width: 2rem;
-}
-
-/* X/Twitter icon */
-.social-links .fa-x-twitter {
-  width: 2rem;
 }
 
 .home-content p {
@@ -563,6 +542,11 @@ h2.post-title,
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.post-meta .icon,
+.entry-meta .icon {
+  margin-right: 0.25rem;
 }
 
 .tag,

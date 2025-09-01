@@ -8,18 +8,14 @@
     <!-- DNS prefetch and preconnect for external resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     
     <!-- Preload critical fonts -->
     <link rel="preload" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface&display=swap"></noscript>
     
-    <!-- Load Font Awesome asynchronously -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"></noscript>
+    <!-- Font Awesome is enqueued via wp_enqueue_style and may include SRI via style_loader_tag filter. -->
     
     <?php wp_head(); ?>
 </head>
