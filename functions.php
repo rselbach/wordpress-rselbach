@@ -89,9 +89,10 @@ function rselbach_scripts() {
     
     wp_add_inline_style('rselbach-style', $custom_css);
     
-    // Add Google Analytics if configured
+    // Add Google Analytics if configured (with async loading)
     if ($ga_id = get_theme_mod('rselbach_google_analytics')) {
-        wp_enqueue_script('google-analytics', 'https://www.googletagmanager.com/gtag/js?id=' . $ga_id, array(), null, false);
+        wp_enqueue_script('google-analytics', 'https://www.googletagmanager.com/gtag/js?id=' . $ga_id, array(), null, true);
+        wp_script_add_data('google-analytics', 'async', true);
         
         $ga_script = "
             window.dataLayer = window.dataLayer || [];
@@ -341,3 +342,108 @@ function rselbach_body_classes($classes) {
     return $classes;
 }
 add_filter('body_class', 'rselbach_body_classes');
+
+/**
+ * Add lazy loading to images
+ */
+function rselbach_add_lazy_loading($content) {
+    // Don't lazy load if in admin area
+    if (is_admin()) {
+        return $content;
+    }
+    
+    // Add loading="lazy" to all img tags that don't already have it
+    $content = preg_replace('/<img((?!loading=)[^>]*)>/i', '<img$1 loading="lazy">', $content);
+    
+    return $content;
+}
+add_filter('the_content', 'rselbach_add_lazy_loading');
+add_filter('post_thumbnail_html', 'rselbach_add_lazy_loading');
+add_filter('get_avatar', 'rselbach_add_lazy_loading');
+
+/**
+ * Add browser caching headers
+ */
+function rselbach_add_cache_headers() {
+    // Only add headers if not in admin
+    if (!is_admin()) {
+        $cache_time = 31536000; // 1 year in seconds
+        
+        // Cache static resources
+        if (preg_match('/\.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$/i', $_SERVER['REQUEST_URI'])) {
+            header('Cache-Control: public, max-age=' . $cache_time);
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $cache_time) . ' GMT');
+        }
+    }
+}
+add_action('send_headers', 'rselbach_add_cache_headers');
+
+/**
+ * Optimize jQuery loading
+ */
+function rselbach_optimize_jquery() {
+    if (!is_admin()) {
+        // Remove jQuery Migrate in production
+        wp_deregister_script('jquery-migrate');
+        
+        // Move jQuery to footer
+        wp_scripts()->add_data('jquery', 'group', 1);
+        wp_scripts()->add_data('jquery-core', 'group', 1);
+    }
+}
+add_action('wp_enqueue_scripts', 'rselbach_optimize_jquery');
+
+/**
+ * Remove unnecessary meta tags and links from head
+ */
+function rselbach_clean_head() {
+    // Remove RSD link
+    remove_action('wp_head', 'rsd_link');
+    
+    // Remove WordPress version
+    remove_action('wp_head', 'wp_generator');
+    
+    // Remove wlwmanifest link
+    remove_action('wp_head', 'wlwmanifest_link');
+    
+    // Remove shortlink
+    remove_action('wp_head', 'wp_shortlink_wp_head');
+    
+    // Remove REST API links
+    remove_action('wp_head', 'rest_output_link_wp_head');
+    
+    // Remove oEmbed links
+    remove_action('wp_head', 'wp_oembed_add_discovery_links');
+    
+    // Remove emoji scripts
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('wp_print_styles', 'print_emoji_styles');
+}
+add_action('init', 'rselbach_clean_head');
+
+/**
+ * Disable emojis
+ */
+function rselbach_disable_emojis() {
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    
+    // Remove from TinyMCE
+    add_filter('tiny_mce_plugins', 'rselbach_disable_emojis_tinymce');
+}
+add_action('init', 'rselbach_disable_emojis');
+
+/**
+ * Filter function to remove emoji plugin from TinyMCE
+ */
+function rselbach_disable_emojis_tinymce($plugins) {
+    if (is_array($plugins)) {
+        return array_diff($plugins, array('wpemoji'));
+    }
+    return array();
+}
