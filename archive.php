@@ -1,54 +1,51 @@
 <?php
 /**
- * The template for displaying archive pages by year
+ * Archive template respecting the main query
  */
 
 get_header(); ?>
 
 <div class="header-unstyled">
-    <strong><em>Random thoughts by <a href="<?php echo esc_url(home_url('/')); ?>">Roberto Selbach</a>. See other <a href="<?php echo esc_url(home_url('/blog')); ?>">blog posts</a> here.</em></strong>
-</div>
+    <strong><em>Random thoughts by <a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_html( get_bloginfo('name') ); ?></a>. See other <a href="<?php echo esc_url(home_url('/blog')); ?>">blog posts</a> here.</em></strong>
+    </div>
 
-<div class="archives-page">
-    <h1 class="page-title"><?php _e('Archives', 'rselbach'); ?></h1>
-    
-    <div class="archives-list">
-        <?php
-        // Get all posts grouped by year
-        $years = array();
-        $posts = get_posts(array(
-            'numberposts' => -1,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'post_type' => 'post',
-            'post_status' => 'publish',
-        ));
-        
-        foreach ($posts as $post) {
-            $year = get_the_date('Y', $post);
-            if (!isset($years[$year])) {
-                $years[$year] = array();
-            }
-            $years[$year][] = $post;
-        }
-        ?>
-        
-        <?php foreach ($years as $year => $year_posts) : ?>
-            <div class="archive-year">
-                <h2><?php echo esc_html($year); ?></h2>
-                <ul class="archive-items">
-                    <?php foreach ($year_posts as $post) : setup_postdata($post); ?>
-                        <li class="archive-item">
-                            <span class="archive-date"><?php echo get_the_date('M d', $post); ?></span>
-                            <a href="<?php echo get_permalink($post); ?>" class="archive-title">
-                                <?php echo get_the_title($post); ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endforeach; ?>
-        <?php wp_reset_postdata(); ?>
+<div class="list-page">
+    <h1 class="page-title"><?php the_archive_title(); ?></h1>
+
+    <div class="posts-list">
+        <?php if (have_posts()) : ?>
+            <?php while (have_posts()) : the_post(); ?>
+                <div class="post-item">
+                    <h2 class="post-title" style="font-weight: 400;">
+                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    </h2>
+                    <div class="post-meta">
+                        <span class="post-date">
+                            <i class="far fa-calendar-alt"></i> <?php echo get_the_date('F j, Y'); ?>
+                        </span>
+                        <?php if ($tags = get_the_tags()) : ?>
+                            <span class="post-tags">
+                                <i class="fas fa-tags"></i>
+                                <?php foreach ($tags as $tag) : ?>
+                                    <a href="<?php echo esc_url(get_tag_link($tag->term_id)); ?>" class="tag"><?php echo esc_html($tag->name); ?></a>
+                                <?php endforeach; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="post-content markdown-body">
+                        <?php the_excerpt(); ?>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+
+            <?php the_posts_pagination([
+                'mid_size'  => 2,
+                'prev_text' => __('Previous', 'rselbach'),
+                'next_text' => __('Next', 'rselbach'),
+            ]); ?>
+        <?php else : ?>
+            <p><?php _e('No posts found.', 'rselbach'); ?></p>
+        <?php endif; ?>
     </div>
 </div>
 
