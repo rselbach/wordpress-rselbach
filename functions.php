@@ -73,8 +73,10 @@ add_action('after_setup_theme', 'rselbach_content_width', 0);
  * Enqueue scripts and styles
  */
 function rselbach_scripts() {
-    // Enqueue theme stylesheet
-    wp_enqueue_style('rselbach-style', get_stylesheet_uri(), array(), '1.0.0');
+    // Enqueue theme stylesheet (cache-busted by file mtime)
+    $style_path = get_stylesheet_directory() . '/style.css';
+    $style_ver  = file_exists($style_path) ? filemtime($style_path) : null;
+    wp_enqueue_style('rselbach-style', get_stylesheet_uri(), array(), $style_ver);
     
     // Add custom CSS for accent and decoration colors
     $accent_color = get_theme_mod('rselbach_accent_color', '#ff7675');
@@ -317,40 +319,9 @@ function rselbach_body_classes($classes) {
 }
 add_filter('body_class', 'rselbach_body_classes');
 
-/**
- * Add lazy loading to images
- */
-function rselbach_add_lazy_loading($content) {
-    // Don't lazy load if in admin area
-    if (is_admin()) {
-        return $content;
-    }
-    
-    // Add loading="lazy" to all img tags that don't already have it
-    $content = preg_replace('/<img((?!loading=)[^>]*)>/i', '<img$1 loading="lazy">', $content);
-    
-    return $content;
-}
-add_filter('the_content', 'rselbach_add_lazy_loading');
-add_filter('post_thumbnail_html', 'rselbach_add_lazy_loading');
-add_filter('get_avatar', 'rselbach_add_lazy_loading');
+// Core provides image lazy-loading; no custom filters needed.
 
-/**
- * Add browser caching headers
- */
-function rselbach_add_cache_headers() {
-    // Only add headers if not in admin
-    if (!is_admin()) {
-        $cache_time = 31536000; // 1 year in seconds
-        
-        // Cache static resources
-        if (preg_match('/\.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$/i', $_SERVER['REQUEST_URI'])) {
-            header('Cache-Control: public, max-age=' . $cache_time);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $cache_time) . ' GMT');
-        }
-    }
-}
-add_action('send_headers', 'rselbach_add_cache_headers');
+// Let server/CDN handle static asset caching; avoid PHP cache headers.
 
 /**
  * Optimize jQuery loading

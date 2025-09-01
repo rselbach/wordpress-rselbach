@@ -25,6 +25,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="skip-link screen-reader-text" href="#content"><?php echo esc_html__( 'Skip to content', 'rselbach' ); ?></a>
 <div class="layout">
     <?php if (is_front_page() || is_home()) : ?>
     <header class="header">
@@ -41,7 +42,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="header-right">
-                    <nav class="nav-menu">
+                    <nav class="nav-menu" aria-label="<?php echo esc_attr__( 'Primary navigation', 'rselbach' ); ?>">
                         <?php
                         wp_nav_menu(array(
                             'theme_location' => 'primary',
@@ -57,5 +58,5 @@
         </div>
     </header>
     <?php endif; ?>
-    <main class="content">
+    <main id="content" class="content">
         <div class="container">

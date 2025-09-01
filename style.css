@@ -39,6 +39,33 @@ Text Domain: rselbach
   min-width: 0;  /* Prevent flex items from having implicit min-width */
 }
 
+/* Accessibility helpers */
+.screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 1px, 1px);
+  white-space: nowrap;
+  border: 0;
+}
+.screen-reader-text:focus,
+.skip-link:focus {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  width: auto;
+  height: auto;
+  clip: auto;
+  padding: 8px 12px;
+  background: #000;
+  color: #fff;
+  border-radius: 4px;
+}
+
 /* Reset heading styles */
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: .5rem;
