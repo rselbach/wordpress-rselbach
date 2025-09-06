@@ -101,6 +101,18 @@ function rselbach_scripts() {
             --color-decoration: {$decoration_color};
         }
     ";
+
+    // Optionally re-enable image shadows if toggled in Customizer
+    if (get_theme_mod('rselbach_enable_image_shadow', false)) {
+        $custom_css .= "
+            .post-content img,
+            .markdown-body img,
+            .wp-block-image img,
+            .avatar-image {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+        ";
+    }
     
     wp_add_inline_style('rselbach-style', $custom_css);
     
@@ -223,6 +235,18 @@ function rselbach_customize_register($wp_customize) {
         'section'  => 'rselbach_theme_settings',
         'settings' => 'rselbach_avatar_image',
     )));
+
+    // Image shadow toggle
+    $wp_customize->add_setting('rselbach_enable_image_shadow', array(
+        'default'           => false,
+        'sanitize_callback' => 'rselbach_sanitize_checkbox',
+    ));
+
+    $wp_customize->add_control('rselbach_enable_image_shadow', array(
+        'label'   => __('Enable Image Box Shadows', 'rselbach'),
+        'section' => 'rselbach_theme_settings',
+        'type'    => 'checkbox',
+    ));
     
     // Google Analytics setting
     $wp_customize->add_setting('rselbach_google_analytics', array(
@@ -306,6 +330,13 @@ function rselbach_customize_register($wp_customize) {
 add_action('customize_register', 'rselbach_customize_register');
 
 /**
+ * Sanitize checkbox values from the Customizer
+ */
+function rselbach_sanitize_checkbox($checked) {
+    return isset($checked) && (int) (bool) $checked;
+}
+
+/**
  * Custom excerpt length
  */
 function rselbach_excerpt_length($length) {
@@ -328,6 +359,22 @@ function rselbach_add_image_sizes() {
     add_image_size('rselbach-featured', 860, 480, true);
 }
 add_action('after_setup_theme', 'rselbach_add_image_sizes');
+
+/**
+ * Register block styles
+ */
+function rselbach_register_block_styles() {
+    if (function_exists('register_block_style')) {
+        register_block_style(
+            'core/image',
+            array(
+                'name'  => 'shadow',
+                'label' => __('Shadow', 'rselbach'),
+            )
+        );
+    }
+}
+add_action('init', 'rselbach_register_block_styles');
 
 // Title is handled by core via add_theme_support('title-tag') in rselbach_setup().
 

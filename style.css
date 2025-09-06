@@ -126,7 +126,6 @@ img {
   max-width: 75%;
   margin: 2rem auto;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 code {
@@ -474,7 +473,6 @@ hr {
   object-position: center;
   padding: 4px;
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow);
   transition: transform 0.3s ease;
 }
 
@@ -797,6 +795,10 @@ h2.post-title,
   max-width: 75%;
   margin: 0 auto;
   border-radius: 4px;
+}
+
+/* Optional shadow style for Image block */
+.wp-block-image.is-style-shadow img {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
